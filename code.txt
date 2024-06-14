@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function to get the size of the file
+long getFileSize(FILE *file) {
+    fseek(file, 0, SEEK_END);
+    long size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+    return size;
+}
+
+// Function to reverse the contents of the file
+void reversePrint(FILE *file) {
+    long size = getFileSize(file);
+    for (long i = size - 1; i >= 0; i--) {
+        fseek(file, i, SEEK_SET);
+        int ch = fgetc(file);
+        putchar(ch);
+    }
+}
+
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        fprintf(stderr, "Usage: %s <filename>\n", argv[0]);
+        return 1;
+    }
+
+    FILE *file = fopen(argv[1], "r");
+    if (!file) {
+        perror("Could not open file");
+        return 1;
+    }
+
+    reversePrint(file);
+
+    fclose(file);
+    return 0;
+}
